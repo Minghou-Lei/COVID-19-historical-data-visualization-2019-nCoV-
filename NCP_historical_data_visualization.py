@@ -88,11 +88,13 @@ for i in date:
                     isChanged = True
                     break
         if isChanged:
-            NCP_data = NCP_data.append({'provinceName': q, 'province_suspectedCount': old_suspectedCount,
+            NCP_data = NCP_data.append({'provinceName': q,
+                                        'province_suspectedCount': old_suspectedCount,
                                         'province_curedCount': old_curedCount,
                                         'province_deadCount': old_deadCount,
                                         'province_confirmedCount': old_confirmedCount,
-                                        'updateTime': i}, ignore_index=True)
+                                        'updateTime': i
+                                        }, ignore_index=True)
             isChanged = False
 
     tmpProvinceList.clear()
@@ -120,7 +122,6 @@ for i in date:
 
 # MapData = json.dumps(MapData, ensure_ascii=False)
 # print(MapData)
-
 
 def Reverse(lst):
     return [ele for ele in reversed(lst)]
@@ -215,7 +216,7 @@ def get_year_chart(year: str):
             .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
             .set_global_opts(
             title_opts=opts.TitleOpts(
-                title="全国各省份NCP实时动态(单位: K)", pos_left="62%", pos_top="5%"
+                title="全国各省份NCP实时动态(单位: 百人)", pos_left="72%", pos_top="5%"
             )
         )
     )
@@ -315,3 +316,4 @@ if __name__ == '__main__':
     )
 
     timeline.render("NCP.html")
+    print(MapData)
