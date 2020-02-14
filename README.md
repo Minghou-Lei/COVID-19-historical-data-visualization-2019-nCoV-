@@ -1,6 +1,6 @@
 # NCP-historical-data-visualization
 
-Stand with Wuhan
+Stand with Wuhan, 
 Stand with China
 
 使用BlankerL提供的数据仓库和pyecharts实现的新型冠状病毒疫情数据可视化
