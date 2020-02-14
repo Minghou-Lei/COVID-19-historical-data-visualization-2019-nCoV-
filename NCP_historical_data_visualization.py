@@ -106,6 +106,9 @@ for i in date:
 
 NCP_data.reset_index(drop=True)
 
+isGotGuangDong = False
+maxNum = 0
+
 for i in date:
     criteria = NCP_data['updateTime'] == i
     df = NCP_data[criteria]
@@ -115,6 +118,9 @@ for i in date:
         data.append({'name': df.loc[index, 'provinceName'], 'value': [int(
             df.loc[index, 'province_confirmedCount']), float(df.loc[index, 'percent']),
             str(df.loc[index, 'provinceName'])]})
+        if not isGotGuangDong and df.loc[index, 'provinceName'] == '广东':
+            maxNum = int(df.loc[index, 'province_confirmedCount'])
+            isGotGuangDong = True
     data = sorted(data, key=lambda x: -x['value'][1])
     MapData.append({'time': i, 'data': list(data)})
     data.clear()
@@ -134,8 +140,7 @@ fout = open('detail_content', 'w', encoding='utf8')
 fout.write(str(MapData))
 fout.close()
 
-maxNum = 1200
-minNum = 80
+minNum = maxNum/25
 
 
 def get_year_chart(year: str):
