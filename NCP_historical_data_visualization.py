@@ -30,6 +30,7 @@ df.drop(['cityName', 'city_confirmedCount', 'city_suspectedCount',
 df['updateTime'] = pd.to_datetime(df['updateTime'])
 df['updateTime'] = df['updateTime'].apply(
     lambda x: datetime.datetime.strftime(x, '%m-%d'))
+print(df)
 df['provinceName'] = df['provinceName'].apply(
     lambda y: y[:3] if y == '内蒙古自治区' or y == '黑龙江省' else y[:2])
 
@@ -43,7 +44,7 @@ print(NCP_data.shape)
 # NCP_data.to_excel(excel_writer="tmp.xlsx",index=False,encoding='utf-8')
 
 # 获取日期list
-dateSeries = NCP_data.iloc[:, 5]
+dateSeries = NCP_data.iloc[:, 7]
 dateSeries.drop_duplicates(inplace=True)
 date = dateSeries.to_list()
 
@@ -107,7 +108,9 @@ for i in date:
 NCP_data.reset_index(drop=True)
 
 isGotGuangDong = False
+isGotHuBei = False
 maxNum = 0
+maxCount = 0
 
 for i in date:
     criteria = NCP_data['updateTime'] == i
@@ -121,6 +124,9 @@ for i in date:
         if not isGotGuangDong and df.loc[index, 'provinceName'] == '广东':
             maxNum = int(df.loc[index, 'province_confirmedCount'])
             isGotGuangDong = True
+        if not isGotHuBei and df.loc[index, 'provinceName'] == '湖北':
+            maxCount = int(df.loc[index, 'province_confirmedCount'])
+            isGotHuBei = True
     data = sorted(data, key=lambda x: -x['value'][1])
     MapData.append({'time': i, 'data': list(data)})
     data.clear()
@@ -140,7 +146,7 @@ fout = open('detail_content', 'w', encoding='utf8')
 fout.write(str(MapData))
 fout.close()
 
-minNum = maxNum/25
+minNum = maxNum / 25
 
 
 def get_year_chart(year: str):
@@ -240,7 +246,7 @@ def get_year_chart(year: str):
             .reversal_axis()
             .set_global_opts(
             xaxis_opts=opts.AxisOpts(
-                max_=40000, axislabel_opts=opts.LabelOpts(is_show=False)
+                max_=maxCount, axislabel_opts=opts.LabelOpts(is_show=False)
             ),
             yaxis_opts=opts.AxisOpts(
                 axislabel_opts=opts.LabelOpts(is_show=False)),
