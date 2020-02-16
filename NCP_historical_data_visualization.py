@@ -44,7 +44,7 @@ print(NCP_data.shape)
 # NCP_data.to_excel(excel_writer="tmp.xlsx",index=False,encoding='utf-8')
 
 # 获取日期list
-dateSeries = NCP_data.iloc[:, 7]
+dateSeries = NCP_data.iloc[:, 9]
 dateSeries.drop_duplicates(inplace=True)
 date = dateSeries.to_list()
 
