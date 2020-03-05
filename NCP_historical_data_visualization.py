@@ -44,9 +44,16 @@ print(NCP_data.shape)
 # NCP_data.to_excel(excel_writer="tmp.xlsx",index=False,encoding='utf-8')
 
 # 获取日期list
+date_A = []
 dateSeries = NCP_data.iloc[:, 9]
 dateSeries.drop_duplicates(inplace=True)
 date = dateSeries.to_list()
+for i in date:
+    lem_a = date.index(i)
+    if (lem_a%2) == 0:
+        date_A.append(i)
+
+date = date_A
 
 confirmed_date = {}
 province_percent = {}
@@ -82,10 +89,12 @@ for i in date:
             tddf = NCP_data[criteria]
             for j in tddf.index:
                 if str(tddf.loc[j, 'provinceName']) == q:
-                    old_confirmedCount = int(tddf.loc[j, 'province_confirmedCount'])
+                    old_confirmedCount = int(
+                        tddf.loc[j, 'province_confirmedCount'])
                     old_curedCount = int(tddf.loc[j, 'province_curedCount'])
                     old_deadCount = int(tddf.loc[j, 'province_deadCount'])
-                    old_suspectedCount = int(tddf.loc[j, 'province_suspectedCount'])
+                    old_suspectedCount = int(
+                        tddf.loc[j, 'province_suspectedCount'])
                     isChanged = True
                     break
         if isChanged:
@@ -142,7 +151,7 @@ def Reverse(lst):
 time_list = Reverse(date)
 # print(time_list)
 
-fout = open('detail_content', 'w', encoding='utf8')
+fout = open('detail_content.json', 'w', encoding='utf8')
 fout.write(str(MapData))
 fout.close()
 
@@ -165,7 +174,7 @@ def get_year_chart(year: str):
 
     map_chart = (
         Map()
-            .add(
+        .add(
             series_name="",
             data_pair=map_data,
             zoom=1,
@@ -179,7 +188,7 @@ def get_year_chart(year: str):
                 },
             },
         )
-            .set_global_opts(
+        .set_global_opts(
             title_opts=opts.TitleOpts(
                 title="" +
                       str(year) + "全国各省份NCP实时动态(数据来源:丁香园; 数据仓库:BlankerL/DXY-2019-nCoV-Data)",
@@ -188,7 +197,7 @@ def get_year_chart(year: str):
                 pos_top="top",
                 title_textstyle_opts=opts.TextStyleOpts(
                     font_size=25, color="rgba(255,255,255, 0.9)"
-                ),
+                      ),
             ),
             tooltip_opts=opts.TooltipOpts(
                 is_show=True,
@@ -216,16 +225,16 @@ def get_year_chart(year: str):
 
     line_chart = (
         Line()
-            .add_xaxis(time_list)
-            .add_yaxis("", total_num)
-            .add_yaxis(
+        .add_xaxis(time_list)
+        .add_yaxis("", total_num)
+        .add_yaxis(
             "",
             data_mark,
             markpoint_opts=opts.MarkPointOpts(
                 data=[opts.MarkPointItem(type_="max")]),
         )
-            .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
-            .set_global_opts(
+        .set_series_opts(label_opts=opts.LabelOpts(is_show=False))
+        .set_global_opts(
             title_opts=opts.TitleOpts(
                 title="全国各省份NCP实时动态(单位: 百人)", pos_left="72%", pos_top="5%"
             )
@@ -235,16 +244,16 @@ def get_year_chart(year: str):
     bar_y_data = [{"name": x[0], "value": x[1][0]} for x in map_data]
     bar = (
         Bar()
-            .add_xaxis(xaxis_data=bar_x_data)
-            .add_yaxis(
+        .add_xaxis(xaxis_data=bar_x_data)
+        .add_yaxis(
             series_name="",
             yaxis_data=bar_y_data,
             label_opts=opts.LabelOpts(
                 is_show=True, position="right", formatter="{b} : {c}"
             ),
         )
-            .reversal_axis()
-            .set_global_opts(
+        .reversal_axis()
+        .set_global_opts(
             xaxis_opts=opts.AxisOpts(
                 max_=maxCount, axislabel_opts=opts.LabelOpts(is_show=False)
             ),
@@ -268,7 +277,7 @@ def get_year_chart(year: str):
     pie_data = [[x[0], x[1][0]] for x in map_data]
     pie = (
         Pie()
-            .add(
+        .add(
             series_name="",
             data_pair=pie_data,
             radius=["15%", "35%"],
@@ -277,7 +286,7 @@ def get_year_chart(year: str):
                 border_width=1, border_color="rgba(0,0,0,0.5)"
             ),
         )
-            .set_global_opts(
+        .set_global_opts(
             tooltip_opts=opts.TooltipOpts(is_show=True, formatter="{b} {d}%"),
             legend_opts=opts.LegendOpts(is_show=False),
         )
@@ -285,20 +294,20 @@ def get_year_chart(year: str):
 
     grid_chart = (
         Grid()
-            .add(
+        .add(
             bar,
             grid_opts=opts.GridOpts(
                 pos_left="10", pos_right="45%", pos_top="50%", pos_bottom="5"
             ),
         )
-            .add(
+        .add(
             line_chart,
             grid_opts=opts.GridOpts(
                 pos_left="65%", pos_right="80", pos_top="10%", pos_bottom="50%"
             ),
         )
-            .add(pie, grid_opts=opts.GridOpts(pos_left="45%", pos_top="60%"))
-            .add(map_chart, grid_opts=opts.GridOpts())
+        .add(pie, grid_opts=opts.GridOpts(pos_left="45%", pos_top="60%"))
+        .add(map_chart, grid_opts=opts.GridOpts())
     )
 
     return grid_chart
