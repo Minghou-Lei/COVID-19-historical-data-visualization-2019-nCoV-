@@ -1,4 +1,4 @@
-# NCP-historical-data-visualization
+# COVID19-historical-data-visualization
 
 ***Stand with Wuhan<br>
 Stand with China***
